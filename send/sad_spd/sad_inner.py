@@ -1,9 +1,6 @@
 from scapy.all import *
 import sys
 
-from sad_spd_python.sad_mgnt_service_1 import whole_pkt
-from utils.utils import hex_dump
-
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../utils')
@@ -44,6 +41,7 @@ class sad_pkt:
     firewall_sport = 123
     firewall_protocol = "UDP"
     def __init__(self,dst_mode,opcode,tunnel_dip,tunnel_sip):
+        print("create ok")
 
 def op_code_to_str(op_code):
     if op_code == 'ADD':
