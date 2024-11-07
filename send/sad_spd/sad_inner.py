@@ -12,6 +12,8 @@ cur_seq = 0
 
 total_pkt_cnt = 0
 
+sad_pkt_list = []
+
 class sad_pkt:
     op_code = "ADD"
     dst_mac = "08:11:22:33:44:ab"
@@ -41,9 +43,16 @@ class sad_pkt:
     firewall_smask = "255.255.255.255"
     firewall_dport = 456
     firewall_sport = 123
-    firewall_protocol = "UDP"
-    def __init__(self,dst_mode,opcode,tunnel_dip,tunnel_sip):
-
+    protocol = "UDP"
+    def __init__(self,src_mode,dst_mode,opcode,tunnel_dip,tunnel_sip,protocol):
+        self.dst_chip_id = dst_mode[0:2:1]
+        self.dst_mode_id = dst_mode[2:4:1]
+        self.src_chip_id = src_mode[0:2:1]
+        self.src_mode_id = src_mode[2:4:1]
+        self.op_code = opcode
+        self.tunnel_dip = tunnel_dip
+        self.tunnel_sip = tunnel_sip
+        self.protocol = protocol
 
 def op_code_to_str(op_code):
     if op_code == 'ADD':
@@ -67,6 +76,13 @@ def protocol_to_str(protocol):
     else:
         return "00"
 
+def set_sad_pkt(sa_index,tunnel_dip,tunnel_sip,src_mode,dst_mode):
+
+    sad_pkt_list.
+
 def send_sad(whole_pkt):
     hex_dump(whole_pkt)
     sendp(whole_pkt,iface='以太网')
+
+
+
