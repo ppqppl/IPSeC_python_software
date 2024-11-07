@@ -1,0 +1,4 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE b10(dst_chip_id str);
+COMMIT;
