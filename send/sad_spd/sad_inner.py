@@ -10,6 +10,8 @@ from send_pkt import *
 
 cur_seq = 0
 
+total_pkt_cnt = 0
+
 class sad_pkt:
     op_code = "ADD"
     dst_mac = "08:11:22:33:44:ab"
@@ -41,7 +43,7 @@ class sad_pkt:
     firewall_sport = 123
     firewall_protocol = "UDP"
     def __init__(self,dst_mode,opcode,tunnel_dip,tunnel_sip):
-        print("create ok")
+
 
 def op_code_to_str(op_code):
     if op_code == 'ADD':
