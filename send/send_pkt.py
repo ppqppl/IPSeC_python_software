@@ -2,8 +2,11 @@ from scapy.all import *
 import sys
 sys.path.append("..")
 sys.path.append("../utils")
+sys.path.append("./sad_spd")
 from utils import *
 from pkt_class import *
+import sad
+import spd
 
 cur_seq = 0
 
@@ -22,8 +25,8 @@ def send_negotiation_phase_3(pkt_obj):
     print("Send negotiation phase 3")
     send_pkt(pkt_obj.whole_pkt)
 
-def send_pkt(whole_pkt) :
-    # print(whole_pkt)
-    hex_dump(whole_pkt)
-    sendp(whole_pkt,iface='以太网')
+def send_sad_pkt(tunnel_dip,tunnel_sip,sa_index,key_index,protocol,dst_chip):
+    sad.set_sad_pkt(tunnel_dip,tunnel_sip,sa_index,key_index,protocol,dst_chip)
 
+def send_spd_pkt(src_ip,dst_ip,src_port,dst_port,protocol,dst_chip):
+    spd.set_spd_pkt(src_ip,dst_ip,src_port,dst_port,protocol,dst_chip)

@@ -1,8 +1,6 @@
 from scapy.all import *
 import sys
 
-from utils.utils import str_2_hexbytes
-
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../utils')
