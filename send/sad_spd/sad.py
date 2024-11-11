@@ -91,7 +91,7 @@ class sad_pkt:
         return self.mgnt_dma_route_header
     def config_messgae_load(self):
         blank = 0
-        self.messgae_load += (str_2_hexbytes("0100") + str_2_hexbytes(op_code_to_str(op_code)) + str_2_hexbytes(str(sa_valid)) + get_sa_index(self.sa_index) +
+        self.messgae_load += (str_2_hexbytes("0100") + str_2_hexbytes(op_code_to_str(self.op_code)) + str_2_hexbytes(str(self.sa_valid)) + get_sa_index(self.sa_index) +
                               str_2_hexbytes(ipstr_2_hexstr(self.tunnel_dip)) + str_2_hexbytes(ipstr_2_hexstr(self.tunnel_sip)) + str_2_hexbytes(ipstr_2_hexstr(self.firewall_dip)) +
                               str_2_hexbytes(ipstr_2_hexstr(self.firewall_sip)) + str_2_hexbytes(ipstr_2_hexstr(self.firewall_dmask)) + str_2_hexbytes(ipstr_2_hexstr(self.firewall_smask)) +
                               get_port(self.firewall_dport) + get_port(self.firewall_sport) + str_2_hexbytes(protocol_to_str(self.protocol)) + blank.to_bytes(11,byteorder='big'))
@@ -149,7 +149,7 @@ def set_sad_pkt(tunnel_dip,tunnel_sip,sa_index,key_index,protocol,dst_chip):
     for i in range(length):
         proto = protocol[i]
         sad_pkt_obj = sad_pkt(tunnel_dip, tunnel_sip, sa_index, key_index, proto,dst_chip)
-        send_sad_sa_0(sad_pkt_obj)
+        send_sad(sad_pkt_obj)
 
 def send_sad_sa_0(sad_pkt_obj):
     sad_pkt_obj.set_sa_type(0)

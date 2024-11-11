@@ -126,14 +126,17 @@ def ipstr_2_hexstr(data):   # "192.168.1.1" -> "c0aa80101"
 # print(ipstr_2_hexstr("192.168.01.01"))
 # print(macstr_2_str("aa-bb-cc-dd-ee-ff"))
 # print(str_2_hexbytes("1000"))
-data = 10011
-data_hex = hex(data)
-data_str = str(data_hex)[2:]
-data_str_reserve = data_str[::-1]
-data_out_reserve = data_str_reserve.ljust(8,'0')
-print(data_hex)
-print(data_str)
-print(data_str_reserve)
-print(data_out_reserve)
-print(str_2_hexbytes(data_out_reserve[::-1]))
-hex_dump(str_2_hexbytes(data_out_reserve[::-1]))
+# data = 10011
+# data_hex = hex(data)
+# data_str = str(data_hex)[2:]
+# data_str_reserve = data_str[::-1]
+# data_out_reserve = data_str_reserve.ljust(8,'0')
+# print(data_hex)
+# print(data_str)
+# print(data_str_reserve)
+# print(data_out_reserve)
+# print(str_2_hexbytes(data_out_reserve[::-1]))
+# hex_dump(str_2_hexbytes(data_out_reserve[::-1]))
+# data = 0800
+# data_str = str(data)
+# print(data_str)
