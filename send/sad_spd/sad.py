@@ -22,8 +22,8 @@ class sad_pkt:
     op_code = "ADD"
     dst_mac = "08:11:22:33:44:ab"
     src_mac = "08:11:22:33:44:ab"
-    dst_chip_id = "06"
-    dst_mode_id = "02"
+    dst_chip_id = "00"
+    dst_mode_id = "00"
     src_chip_id = "03"
     src_mode_id = "11"
     sa_valid = 1
@@ -64,7 +64,7 @@ class sad_pkt:
     #     self.tunnel_dip = tunnel_dip
     #     self.tunnel_sip = tunnel_sip
     #     self.protocol = protocol
-    def __init__(self,tunnel_dip, tunnel_sip, sa_index, key_index, protocol):
+    def __init__(self,tunnel_dip, tunnel_sip, sa_index, key_index, protocol,dst_chip):
         global sad_index_num
         sad_index_num += 1
         self.tunnel_dip = tunnel_dip
@@ -72,6 +72,12 @@ class sad_pkt:
         self.sa_index = sa_index
         self.key_index = key_index
         self.protocol = protocol
+        if dst_chip == "inner":
+            self.dst_chip_id = "06"
+            self.dst_mode_id = "02"
+        elif dst_chip == "outter":
+            self.dst_chip_id = "04"
+            self.dst_mode_id = "02"
 
     def set_sa_type(self,sa_type):
         self.sa_type = sa_type
@@ -140,11 +146,11 @@ def protocol_to_str(protocol):
     else:
         return "00"
 
-def set_sad_pkt(tunnel_dip,tunnel_sip,sa_index,key_index,protocol):
+def set_sad_pkt(tunnel_dip,tunnel_sip,sa_index,key_index,protocol,dst_chip):
     length = len(protocol)
     for i in range(length):
         proto = protocol[i]
-        sad_pkt_obj = sad_pkt(tunnel_dip, tunnel_sip, sa_index, key_index, proto)
+        sad_pkt_obj = sad_pkt(tunnel_dip, tunnel_sip, sa_index, key_index, proto,dst_chip)
         send_sad_sa_0(sad_pkt_obj)
 
 def send_sad_sa_0(sad_pkt_obj):
