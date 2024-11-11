@@ -67,6 +67,7 @@ class sad_pkt:
     def __init__(self,tunnel_dip, tunnel_sip, sa_index, key_index, protocol):
         global sad_index_num
 
+
     def set_sa_type(self,sa_type):
         self.sa_type = sa_type
     def set_sa_op_code(self,sa_op_code):
