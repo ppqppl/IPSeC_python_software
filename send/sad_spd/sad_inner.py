@@ -66,7 +66,12 @@ class sad_pkt:
     #     self.protocol = protocol
     def __init__(self,tunnel_dip, tunnel_sip, sa_index, key_index, protocol):
         global sad_index_num
-
+        sad_index_num += 1
+        self.tunnel_dip = tunnel_dip
+        self.tunnel_sip = tunnel_sip
+        self.sa_index = sa_index
+        self.key_index = key_index
+        self.protocol = protocol
 
     def set_sa_type(self,sa_type):
         self.sa_type = sa_type
@@ -74,18 +79,22 @@ class sad_pkt:
         self.sa_op_code = sa_op_code
     def config_message_head(self):
         self.message_head += (str_2_hexbytes(macstr_2_str(self.dst_mac)) + get_mac_address() + str_2_hexbytes("1000") + self.cue_seq.to_bytes(2,byteorder='big'))
+        return self.message_head
     def config_mgnt_dma_route_header(self):
         blank = 0
         self.mgnt_dma_route_header += (str_2_hexbytes(self.dst_chip_id) + str_2_hexbytes(self.dst_mode_id) + str_2_hexbytes(self.src_chip_id) +
                                        str_2_hexbytes(self.src_mode_id) + blank.to_bytes(12,byteorder='big'))
+        return self.mgnt_dma_route_header
     def config_messgae_load(self):
         blank = 0
         self.messgae_load += (str_2_hexbytes("0100") + str_2_hexbytes(op_code_to_str(op_code)) + str_2_hexbytes(str(sa_valid)) + get_sa_index(self.sa_index) +
                               str_2_hexbytes(ipstr_2_hexstr(self.tunnel_dip)) + str_2_hexbytes(ipstr_2_hexstr(self.tunnel_sip)) + str_2_hexbytes(ipstr_2_hexstr(self.firewall_dip)) +
                               str_2_hexbytes(ipstr_2_hexstr(self.firewall_sip)) + str_2_hexbytes(ipstr_2_hexstr(self.firewall_dmask)) + str_2_hexbytes(ipstr_2_hexstr(self.firewall_smask)) +
                               get_port(self.firewall_dport) + get_port(self.firewall_sport) + str_2_hexbytes(protocol_to_str(self.protocol)) + blank.to_bytes(11,byteorder='big'))
+        return self.messgae_load
     def config_whole_pkt(self):
-        self.whole_pkt = self.message_head + self.mgnt_dma_route_header + self.messgae_load
+        self.whole_pkt = self.config_message_head() + self.config_mgnt_dma_route_header() + self.config_messgae_load()
+        return self.whole_pkt
 
 def get_mac_address():
     mac = uuid.UUID(int = uuid.getnode())
@@ -133,12 +142,15 @@ def protocol_to_str(protocol):
 
 def set_sad_pkt(tunnel_dip,tunnel_sip,sa_index,key_index,protocol):
     length = len(protocol)
-
+    for i in range(length):
+        proto = protocol[i]
+        sad_pkt_obj = sad_pkt(tunnel_dip, tunnel_sip, sa_index, key_index, proto)
+        send_sad_sa_0(sad_pkt_obj)
 
 def send_sad_sa_0(sad_pkt_obj):
     sad_pkt_obj.set_sa_type(0)
     sad_pkt_obj.set_sa_op_code(2)
-    whole_pkt = sad_pkt_obj.whole_pkt
+    whole_pkt = sad_pkt_obj.config_whole_pkt()
     hex_dump(whole_pkt)
     sendp(whole_pkt,iface='以太网')
 
