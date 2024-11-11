@@ -1,8 +1,6 @@
 from scapy.all import *
 import sys
 
-from PowerOnScripts.sad_spd_python.ubuntu.sad_mgnt_service import whole_pkt
-
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../utils')
