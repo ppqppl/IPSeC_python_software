@@ -20,6 +20,7 @@ class arp_pkt:
     mgnt_schip_id = "00"
     mgnt_smode_id = "cc"
     mgnt_protocol = "0100"
+    op_code = 1 # 1 who-has，2 is-at
     dst_ip = "192.168.5.5"
     src_ip = "192.168.5.6"
     dst_mac = "00:00:00:00:00:01"
@@ -30,11 +31,12 @@ class arp_pkt:
     whole_pkt = b''
 
 
-    def __init__(self,dst_ip,src_ip,dst_mac,src_mac,dst_chip):
+    def __init__(self,dst_ip,src_ip,dst_mac,src_mac,dst_chip,op_code):
         self.dst_ip = dst_ip
         self.src_ip = src_ip
         self.dst_mac = dst_mac
         self.src_mac = src_mac
+        self.op_code = 1 if op_code == "who_has" else 2
         if dst_chip == "m300":
             self.mgnt_dchip_id = "11"
             self.mgnt_dmode_id = "14"
@@ -53,9 +55,9 @@ class arp_pkt:
         return self.mgnt_dma_head
 
     def get_arp_requair_whole_pkt(self):
-        arp_request = ARP(pdst = self.dst_ip,psrc = self.src_ip,hwdst = self.dst_mac,hwsrc = self.src_mac)
+        arp_request = ARP(pdst = self.dst_ip,psrc = self.src_ip,hwdst = self.dst_mac,hwsrc = self.src_mac,op = self.op_code)
         ether_frame = Ether(dst=self.dst_mac, src=self.src_mac)
-        # arp_request.show()
+        arp_request.show()
         self.arp_whole_pkt = bytes(ether_frame / arp_request)
         return self.arp_whole_pkt
 
@@ -73,8 +75,8 @@ def get_mac_address():
         res += (int(mac_str[i*2:i*2+2],16)).to_bytes(1,byteorder='big')
     return res
 
-def set_arp_pkt(dst_ip,src_ip,dst_mac,src_mac,dst_chip):
-    arp_pkt_obj = arp_pkt(dst_ip,src_ip,dst_mac,src_mac,dst_chip)
+def set_arp_pkt(dst_ip,src_ip,dst_mac,src_mac,dst_chip,op_code):
+    arp_pkt_obj = arp_pkt(dst_ip,src_ip,dst_mac,src_mac,dst_chip,op_code)
     send_arp(arp_pkt_obj)
 
 def send_arp(arp_pkt_obj):
@@ -82,4 +84,4 @@ def send_arp(arp_pkt_obj):
     hex_dump(whole_pkt)
     sendp(whole_pkt,iface='以太网')
 
-set_arp_pkt("192.168.133.128","192.168.99.2","00:00:00:00:00:01","00:00:00:00:00:02","m300")
+# set_arp_pkt("192.168.133.128","192.168.99.2","00:00:00:00:00:01","00:00:00:00:00:02","m300","is_at")
