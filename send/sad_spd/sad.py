@@ -81,16 +81,16 @@ class sad_pkt:
     def set_sa_op_code(self,sa_op_code):
         self.sa_op_code = sa_op_code
     def config_message_head(self):
-        self.message_head += (str_2_hexbytes(macstr_2_str(self.dst_mac)) + get_mac_address() + str_2_hexbytes("1000") + self.cue_seq.to_bytes(2,byteorder='big'))
+        self.message_head = (str_2_hexbytes(macstr_2_str(self.dst_mac)) + get_mac_address() + str_2_hexbytes("1000") + self.cue_seq.to_bytes(2,byteorder='big'))
         return self.message_head
     def config_mgnt_dma_route_header(self):
         blank = 0
-        self.mgnt_dma_route_header += (str_2_hexbytes(self.dst_chip_id) + str_2_hexbytes(self.dst_mode_id) + str_2_hexbytes(self.src_chip_id) +
+        self.mgnt_dma_route_header = (str_2_hexbytes(self.dst_chip_id) + str_2_hexbytes(self.dst_mode_id) + str_2_hexbytes(self.src_chip_id) +
                                        str_2_hexbytes(self.src_mode_id) + blank.to_bytes(12,byteorder='big'))
         return self.mgnt_dma_route_header
     def config_messgae_load(self):
         blank = 0
-        self.messgae_load += (str_2_hexbytes("0100") + str_2_hexbytes(op_code_to_str(self.op_code)) + str_2_hexbytes(str(self.sa_valid)) + get_sa_index(self.sa_index) +
+        self.messgae_load = (str_2_hexbytes("0100") + str_2_hexbytes(op_code_to_str(self.op_code)) + str_2_hexbytes(str(self.sa_valid)) + get_sa_index(self.sa_index) +
                               str_2_hexbytes(ipstr_2_hexstr(self.tunnel_dip)) + str_2_hexbytes(ipstr_2_hexstr(self.tunnel_sip)) + str_2_hexbytes(ipstr_2_hexstr(self.firewall_dip)) +
                               str_2_hexbytes(ipstr_2_hexstr(self.firewall_sip)) + str_2_hexbytes(ipstr_2_hexstr(self.firewall_dmask)) + str_2_hexbytes(ipstr_2_hexstr(self.firewall_smask)) +
                               get_port(self.firewall_dport) + get_port(self.firewall_sport) + str_2_hexbytes(protocol_to_str(self.protocol)) + blank.to_bytes(11,byteorder='big'))

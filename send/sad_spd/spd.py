@@ -52,20 +52,23 @@ class spd_pkt:
     def set_op_code(self, op_code):
         self.op_code = op_code
     def config_message_head(self):
-        self.message_head += (str_2_hexbytes(macstr_2_str(self.dst_mac)) + get_mac_address() + str_2_hexbytes("1000") + self.cue_seq.to_bytes(2,byteorder='big'))
+        self.message_head = (str_2_hexbytes(macstr_2_str(self.dst_mac)) + get_mac_address() + str_2_hexbytes("1000") + self.cue_seq.to_bytes(2,byteorder='big'))
         return self.message_head
     def config_mgnt_dma_route_header(self):
         blank = 0
-        self.mgnt_dma_route_header += (str_2_hexbytes(self.dst_chip_id) + str_2_hexbytes(self.dst_mode_id) + str_2_hexbytes(self.src_chip_id) +
+        self.mgnt_dma_route_header = (str_2_hexbytes(self.dst_chip_id) + str_2_hexbytes(self.dst_mode_id) + str_2_hexbytes(self.src_chip_id) +
                                        str_2_hexbytes(self.src_mode_id) + blank.to_bytes(12,byteorder='big'))
         return self.mgnt_dma_route_header
     def config_messgae_load(self):
         blank = 0
-        self.messgae_load += (str_2_hexbytes("0100") + str_2_hexbytes(op_code_to_str(self.op_code)) + str_2_hexbytes("04") + str_2_hexbytes(protocol_to_str(self.protocol)) +
+        self.messgae_load = (str_2_hexbytes("0100") + str_2_hexbytes(op_code_to_str(self.op_code)) + str_2_hexbytes("04") + str_2_hexbytes(protocol_to_str(self.protocol)) +
                               blank.to_bytes(1,byteorder='big') + str_2_hexbytes(self.dst_port) + str_2_hexbytes(self.src_port) + blank.to_bytes(2,byteorder='big') +
                               get_sa_index(self.sa_index) + blank.to_bytes(12,byteorder='big') + str_2_hexbytes(ipstr_2_hexstr(self.src_ip)) + blank.to_bytes(12,byteorder='big') +
                               str_2_hexbytes(ipstr_2_hexstr(self.src_mask)) + blank.to_bytes(12,byteorder='big') + str_2_hexbytes(ipstr_2_hexstr(self.dst_ip)) +
                               blank.to_bytes(12,byteorder='big') + str_2_hexbytes(ipstr_2_hexstr(self.dst_mask)))
+    def config_whole_pkt(self):
+        self.whole_pkt = self.config_message_head() + self.config_mgnt_dma_route_header() + self.config_messgae_load()
+        return self.whole_pkt
 
 def get_mac_address():
     mac = uuid.UUID(int = uuid.getnode())
@@ -112,6 +115,6 @@ def set_spd_pkt(src_ip,dst_ip,src_port,dst_port,protocol,dst_chip):
         send_spd(spd_pkt_obj)
 
 def send_spd(spd_pkt_obj):
-    whole_pkt = sad_pkt_obj.whole_pkt
+    whole_pkt = sad_pkt_obj.config_whole_pkt()
     hex_dump(whole_pkt)
     sendp(whole_pkt,iface='以太网')
