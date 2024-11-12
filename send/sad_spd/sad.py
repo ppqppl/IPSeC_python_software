@@ -6,7 +6,6 @@ sys.path.append('../../')
 sys.path.append('../../utils')
 
 from utils import *
-from send_pkt import *
 
 cur_seq = 0
 
