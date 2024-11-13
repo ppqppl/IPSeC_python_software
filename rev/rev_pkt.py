@@ -38,7 +38,8 @@ def rev_socket_1000(threadname):
     print("Thread " + threadname + " start!!")
     print(11)
     # packet = sniff(iface='WLAN',filter="ether proto 0x1000",count=1,prn=callback_sniff_1000)
-    packet = sniff(iface='WLAN',prn = callback_sniff_1000)
+    # packet = sniff(iface='WLAN',prn = callback_sniff_1000)
+    packet = sniff(filter = "ARP")
     # print(packet)
 
 def pkt_judge(pkt_data):
