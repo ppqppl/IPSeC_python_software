@@ -10,6 +10,7 @@ import utils
 from sqlite3_utils import *
 
 def callback_sniff_1000(pkt_data):
+    blank = 0
     # pkt_data.show()
     dst_mac = pkt_data['Ethernet'].dst
     src_mac = pkt_data['Ethernet'].src
@@ -23,7 +24,10 @@ def callback_sniff_1000(pkt_data):
     pkt_data = data[18:]
     hex_dump(pkt_data)
     whole_pkt = ""
-    whole_pkt[20] = '01' if op_mode == "01" else 0
+
+    whole_pkt += "01" if op_mode == "00" else "01"
+    whole_pkt[41] = '1' if op_mode == "01" else '0'
+    whole_pkt += blank.to_bytes(11,byteorder='big')
 
     send_pkt(whole_pkt)
 
