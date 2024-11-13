@@ -9,6 +9,7 @@ from utils import *
 from pkt_class import *
 import sad
 import spd
+import arp
 import negotiation
 import arp_all
 
@@ -34,3 +35,6 @@ def send_sad_pkt(tunnel_dip,tunnel_sip,sa_index,key_index,protocol,dst_chip):
 
 def send_spd_pkt(src_ip,dst_ip,src_port,dst_port,protocol,dst_chip):
     spd.set_spd_pkt(src_ip,dst_ip,src_port,dst_port,protocol,dst_chip)
+
+def send_arp_pkt(dst_ip,src_ip,dst_mac,src_mac,dst_chip,op_code):
+    arp.set_arp_pkt(dst_ip,src_ip,dst_mac,src_mac,dst_chip,op_code)
