@@ -24,11 +24,18 @@ def callback_sniff_1000(pkt_data):
     pkt_data = data[18:]
     hex_dump(pkt_data)
     whole_pkt = ""
-
+    whole_pkt += src_mac
+    whole_pkt += dst_mac
+    whole_pkt += "0100"
+    whole_pkt +=  seq
+    whole_pkt += src_chip_id
+    whole_pkt += src_mode_id
+    whole_pkt += dst_chip_id
+    whole_pkt += dst_mode_id
     whole_pkt += "01" if op_mode == "00" else "01"
-    whole_pkt[41] = '1' if op_mode == "01" else '0'
+    # whole_pkt[41] = '1' if op_mode == "01" else '0'
     whole_pkt += blank.to_bytes(11,byteorder='big')
-
+    whole_pkt += pkt_data
     send_pkt(whole_pkt)
 
 def rev_pkt_1000(threadname):
