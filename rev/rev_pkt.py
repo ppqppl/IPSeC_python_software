@@ -15,7 +15,7 @@ def callback_sniff_1000(pkt_data):
     # pkt_data.show()
     if pkt_data.haslayer(IP):
         pkt_data_ip = pkt_data[IP]
-        if hasstr(pkt_data_ip,'proto'):
+        if hasattr(pkt_data_ip,'proto'):
             print(pkt_data[IP].proto)
         else:
             print("no proto")
