@@ -40,14 +40,46 @@ def callback_sniff_1000(pkt_data):
 
 def rev_pkt_1000(threadname):
     print("Thread " + threadname + " start!!")
-    print(11)
     packet = sniff(iface='WLAN',filter="ether proto 0x1000",prn=callback_sniff_1000)
     # packet = sniff(iface='WLAN',prn = callback_sniff_1000)
     # packet = sniff(filter = "arp")
     # print(packet)
 
-# def rev_pkt_arp(threadname):
+def callback_sniff_arp(pkt_data):
+    blank = 0
+    cue_seq = 0
+    dst_chip_ip = "01"
+    dst_mode_ip = "01"
+    src_chip_ip = "01"
+    src_mode_ip = "01"
+    dst_mac = pkt_data['Ethernet'].dst
+    src_mac = pkt_data['Ethernet'].src
+    src_ip = pkt_data['IP'].psrc
+    dst_ip = pkt_data['IP'].pdst
+    pkt_data.show()
+    print(dst_mac)
+    print(src_mac)
+    ptype = pkt_data['ARP'].ptype
+    op = pkt_data['ARP'].op
+    op_mode = "01" if op == "00" else "00"
 
+    whole_pkt = ""
+    whole_pkt += dst_mac
+    whole_pkt += src_mac
+    whole_pkt += "1000"
+    whole_pkt += cue_seq.to_bytes(2,byteorder='big')
+    whole_pkt += dst_chip_ip
+    whole_pkt += dst_mode_ip
+    whole_pkt += src_chip_ip
+    whole_pkt += src_mode_ip
+    whole_pkt += op_mode
+    whole_pkt += blank.to_bytes(11,byteorder='big')
+
+    send_pkt(whole_pkt)
+
+def rev_pkt_arp(threadname):
+    print("Thread " + threadname + " start!!")
+    packet = sniff(iface='WLAN',filter="arp",count = 1,prn=callback_sniff_arp)
 
 def pkt_judge(pkt_data):
     global dst_mode_id
@@ -76,3 +108,4 @@ def send_pkt(whole_pkt):
     send(whole_pkt,iface='WLAN')
 
 # rev_pkt_1000('a')
+rev_pkt_arp('a')
