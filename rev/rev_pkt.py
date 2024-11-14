@@ -9,6 +9,13 @@ sys.path.append("../sql_console")
 import utils
 from sqlite3_utils import *
 
+chip_mode_ip = {
+    "sad" : {
+        "chip" : "01",
+        "mode" : "01",
+    },
+}
+
 def callback_sniff_1000(pkt_data):
     blank = 0
     # pkt_data.show()
