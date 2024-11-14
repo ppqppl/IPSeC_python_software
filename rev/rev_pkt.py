@@ -63,6 +63,10 @@ def callback_sniff_arp(pkt_data):
     op = pkt_data['ARP'].op
     op_mode = "01" if op == "00" else "00"
 
+    whole_pkt_head = ""
+    whole_pkt_head += dst_mac
+    whole_pkt_head += src_mac
+
     whole_pkt = ""
     whole_pkt += dst_mac
     whole_pkt += src_mac
